@@ -3,7 +3,9 @@ package com.github.irobot.controller;
 import com.github.developer.weapons.model.official.MessageTypeEnum;
 import com.github.developer.weapons.model.official.OfficialAutoReplyMessage;
 import com.github.developer.weapons.service.WechatOfficialService;
+import com.github.irobot.service.CheckService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -24,12 +26,20 @@ public class WeixinController {
     @Autowired
     private WechatOfficialService wechatOfficialService;
 
+    @Autowired
+    private CheckService checkService;
+
     @Value("${weixin.token}")
     private String token;
 
+    @Value("${ucloud.public.key}")
+    private String publicKey;
+
+    @Value("${ucloud.private.key}")
+    private String privateKey;
+
     @RequestMapping(value = "/weixin/receive", method = RequestMethod.GET)
-    public void receive(
-            @RequestParam(value = "signature") String signature,
+    public void receive(@RequestParam(value = "signature") String signature,
             @RequestParam(value = "timestamp") String timestamp,
             @RequestParam(value = "nonce") String nonce,
             @RequestParam(value = "echostr") String echostr,
@@ -46,8 +56,7 @@ public class WeixinController {
     }
 
     @RequestMapping(value = "/weixin/receive", method = RequestMethod.POST)
-    public void receive(
-            @RequestParam(value = "signature") String signature,
+    public void receive(@RequestParam(value = "signature") String signature,
             @RequestParam(value = "timestamp") String timestamp,
             @RequestParam(value = "nonce") String nonce,
             HttpServletRequest request,
@@ -65,13 +74,18 @@ public class WeixinController {
         try {
             Map<String, String> map = wechatOfficialService.toMap(request.getInputStream());
             if (map.get("MsgType").equals("image")) {
-                String msg = OfficialAutoReplyMessage.build()
-                        .withContent("接收到图片链接为：" + map.get("PicUrl"))
-                        .withMsgtype(MessageTypeEnum.TEXT)
-                        .withFromUserName(map.get("ToUserName"))
-                        .withToUserName(map.get("FromUserName"))
-                        .toXml();
-                writer.print(msg);
+                String res = checkService.check(publicKey, privateKey, map.get("PicUrl"));
+                OfficialAutoReplyMessage officialAutoReplyMessage =
+                        OfficialAutoReplyMessage.build()
+                                .withMsgtype(MessageTypeEnum.TEXT)
+                                .withFromUserName(map.get("ToUserName"))
+                                .withToUserName(map.get("FromUserName"));
+                if (StringUtils.equals("forbid", res)) {
+                    officialAutoReplyMessage.withContent("小哥，你的图片有点问题哦");
+                } else {
+                    officialAutoReplyMessage.withContent("骚年，你这图片刚刚的没问题");
+                }
+                writer.print(officialAutoReplyMessage.toXml());
                 writer.flush();
                 writer.close();
                 return;
