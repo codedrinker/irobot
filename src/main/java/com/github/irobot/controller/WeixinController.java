@@ -52,6 +52,8 @@ public class WeixinController {
             @RequestParam(value = "nonce") String nonce,
             HttpServletRequest request,
             HttpServletResponse response) throws IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
         boolean valid = wechatOfficialService.isValid(signature, timestamp, nonce, token);
         PrintWriter writer = response.getWriter();
         if (!valid) {
