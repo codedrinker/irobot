@@ -37,7 +37,7 @@ public class CheckService {
         packageParams.put("ResourceId", appId);
         packageParams.put("Timestamp", timestamp);
         packageParams.put("Url", imageUrl);
-        String signature = null;
+        String signature;
         try {
             signature = SignUtil.createSign(packageParams, privateKey);
         } catch (Exception e) {

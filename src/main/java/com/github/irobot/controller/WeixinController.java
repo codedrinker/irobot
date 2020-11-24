@@ -74,6 +74,7 @@ public class WeixinController {
         try {
             Map<String, String> map = wechatOfficialService.toMap(request.getInputStream());
             if (map.get("MsgType").equals("image")) {
+                log.info("PicUrl:{}", map.get("PicUrl"));
                 String res = checkService.check(publicKey, privateKey, map.get("PicUrl"));
                 OfficialAutoReplyMessage officialAutoReplyMessage =
                         OfficialAutoReplyMessage.build()
