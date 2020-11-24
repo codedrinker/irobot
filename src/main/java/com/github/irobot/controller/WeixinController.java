@@ -64,19 +64,14 @@ public class WeixinController {
         }
         try {
             Map<String, String> map = wechatOfficialService.toMap(request.getInputStream());
-            log.info("convert map : {}", map);
-            String ToUserName = map.get("ToUserName");
-            String FromUserName = map.get("FromUserName");
-            String MsgType = map.get("MsgType");
-            if (MsgType.equals("image")) {
+            if (map.get("MsgType").equals("image")) {
                 String msg = OfficialAutoReplyMessage.build()
                         .withContent("接收到图片链接为：" + map.get("PicUrl"))
                         .withMsgtype(MessageTypeEnum.TEXT)
-                        .withFromUserName(ToUserName)
-                        .withToUserName(FromUserName)
+                        .withFromUserName(map.get("ToUserName"))
+                        .withToUserName(map.get("FromUserName"))
                         .toXml();
-                log.info("convert msg : {}", msg);
-                writer.print(msg); //返回转换后的XML字符串
+                writer.print(msg);
                 writer.flush();
                 writer.close();
                 return;
