@@ -67,14 +67,10 @@ public class WeixinController {
             log.info("convert map : {}", map);
             String ToUserName = map.get("ToUserName");
             String FromUserName = map.get("FromUserName");
-            String CreateTime = map.get("CreateTime");
             String MsgType = map.get("MsgType");
-            String Content = map.get("Content");
-            if (MsgType.equals("text")) {//判断消息类型是否是文本消息(text)
+            if (MsgType.equals("image")) {
                 String msg = OfficialAutoReplyMessage.build()
-                        .withContent("您好，" + FromUserName + "\n我是：" + ToUserName
-                                + "\n您发送的消息类型为：" + MsgType + "\n您发送的时间为" + CreateTime
-                                + "\n 内容是：" + Content)
+                        .withContent("接收到图片链接为：" + map.get("PicUrl"))
                         .withMsgtype(MessageTypeEnum.TEXT)
                         .withFromUserName(ToUserName)
                         .withToUserName(FromUserName)
