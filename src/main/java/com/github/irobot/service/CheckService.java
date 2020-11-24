@@ -23,7 +23,7 @@ public class CheckService {
      */
     public String check(String publicKey, String privateKey, String imageUrl) {
         String ucloudUrl = "http://api.uai.ucloud.cn/v1/image/scan";
-        String appId = "uaicensor-rjmvogpx";
+        String appId = "uaicensor-ntrq5zcv";
 
         //图片绝对路径
         RestTemplate rest = new RestTemplate();
