@@ -62,6 +62,7 @@ public class WeixinController {
         }
         try {
             Map<String, String> map = wechatOfficialService.toMap(request.getInputStream());
+            log.info("convert map : {}", map);
             String ToUserName = map.get("ToUserName");
             String FromUserName = map.get("FromUserName");
             String CreateTime = map.get("CreateTime");
@@ -76,6 +77,7 @@ public class WeixinController {
                         .withFromUserName(FromUserName)
                         .withToUserName(ToUserName)
                         .toXml();
+                log.info("convert msg : {}", msg);
                 writer.print(msg); //返回转换后的XML字符串
                 writer.flush();
                 writer.close();
