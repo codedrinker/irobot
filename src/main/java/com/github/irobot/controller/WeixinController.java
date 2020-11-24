@@ -74,8 +74,8 @@ public class WeixinController {
                                 + "\n您发送的消息类型为：" + MsgType + "\n您发送的时间为" + CreateTime
                                 + "\n 内容是：" + Content)
                         .withMsgtype(MessageTypeEnum.TEXT)
-                        .withFromUserName(FromUserName)
-                        .withToUserName(ToUserName)
+                        .withFromUserName(ToUserName)
+                        .withToUserName(FromUserName)
                         .toXml();
                 log.info("convert msg : {}", msg);
                 writer.print(msg); //返回转换后的XML字符串
