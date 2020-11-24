@@ -18,7 +18,6 @@ import java.io.PrintWriter;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/weixin")
 @Slf4j
 public class WeixinController {
 
@@ -28,7 +27,7 @@ public class WeixinController {
     @Value("${weixin.token}")
     private String token;
 
-    @RequestMapping(value = "/receive", method = RequestMethod.GET)
+    @RequestMapping(value = "/weixin/receive", method = RequestMethod.GET)
     public void receive(
             @RequestParam(value = "signature") String signature,
             @RequestParam(value = "timestamp") String timestamp,
@@ -46,7 +45,7 @@ public class WeixinController {
         writer.close();
     }
 
-    @RequestMapping(value = "/receive", method = RequestMethod.POST)
+    @RequestMapping(value = "/weixin/receive", method = RequestMethod.POST)
     public void receive(
             @RequestParam(value = "signature") String signature,
             @RequestParam(value = "timestamp") String timestamp,
