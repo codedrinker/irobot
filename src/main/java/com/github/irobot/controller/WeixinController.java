@@ -28,8 +28,8 @@ public class WeixinController {
     @Value("${weixin.token}")
     private String token;
 
-    @RequestMapping(value = "/verify", method = RequestMethod.GET)
-    public void verify(
+    @RequestMapping(value = "/receive", method = RequestMethod.GET)
+    public void receive(
             @RequestParam(value = "signature") String signature,
             @RequestParam(value = "timestamp") String timestamp,
             @RequestParam(value = "nonce") String nonce,
